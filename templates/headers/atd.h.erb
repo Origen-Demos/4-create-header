@@ -1,0 +1,113 @@
+/**************************************************************************
+ * FILE NAME: ATD.h                      COPYRIGHT (c) Freescale 2015 *
+ * REVISION:  1.0                                     All Rights Reserved *
+ *                                                                        *
+ * DESCRIPTION:                                                           *
+ * This file contains all of the register and bit field definitions for   *
+ * the ATD.                                                           *
+ *========================================================================*
+ * UPDATE HISTORY                                                         *
+ * REV      AUTHOR      DATE       DESCRIPTION OF CHANGE                  *
+ * ---   -----------  ---------    ---------------------                  *
+ * 1.0     M.Doidge   25-Mar-15       Initial Release                     *
+ *========================================================================*
+ * COPYRIGHT:                                                             *
+ *  Freescale Semiconductor, INC. All Rights Reserved. You are hereby     *
+ *  granted a copyright license to use, modify, and distribute the        *
+ *  SOFTWARE so long as this entire notice is retained without alteration *
+ *  in any modified and/or redistributed versions, and that such modified *
+ *  versions are clearly identified as such. No licenses are granted by   *
+ *  implication, estoppel or otherwise under any patentsor trademarks     *
+ *  of Freescale Semiconductor, Inc. This software is provided on an      *
+ *  "AS IS" basis and without warranty.                                   *
+ *                                                                        *
+ *  To the maximum extent permitted by applicable law, Freescale          *
+ *  Semiconductor DISCLAIMS ALL WARRANTIES WHETHER EXPRESS OR IMPLIED,    *
+ *  INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A      *
+ *  PARTICULAR PURPOSE AND ANY WARRANTY AGAINST INFRINGEMENT WITH REGARD  *
+ *  TO THE SOFTWARE (INCLUDING ANY MODIFIED VERSIONS THEREOF) AND ANY     *
+ *  ACCOMPANYING WRITTEN MATERIALS.                                       *
+ *                                                                        *
+ *  To the maximum extent permitted by applicable law, IN NO EVENT        *
+ *  SHALL Freescale Semiconductor BE LIABLE FOR ANY DAMAGES WHATSOEVER    *
+ *  (INCLUDING WITHOUT LIMITATION, DAMAGES FOR LOSS OF BUSINESS PROFITS,  *
+ *  BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR OTHER         *
+ *  PECUNIARY LOSS) ARISING OF THE USE OR INABILITY TO USE THE SOFTWARE.  *
+ *                                                                        *
+ *  Freescale Semiconductor assumes no responsibility for the             *
+ *  maintenance and support of this software                              *
+ *                                                                        *
+ **************************************************************************/
+/*>>>>>>> NOTE! this file is auto-generated please do not edit it! <<<<<<<*/
+
+/**************************************************************************
+ * Example register & bit field write:                                    *
+ *                                                                        *
+ *  <MODULE>.<REGISTER>.B.<BIT> = 1;                                      *
+ *  <MODULE>.<REGISTER>.R       = 0x10000000;                             *
+ *                                                                        *
+ **************************************************************************/
+
+#ifndef _ATD_H_
+#define _ATD_H_
+#include "typedefs.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+#ifdef __MWERKS__
+#pragma push
+#pragma ANSI_strict off
+#endif
+#ifdef __ghs__
+#pragma ghs nowarning 618
+#endif
+
+
+/* ============================================================================
+   =============================== Module: ATD ================================
+   ============================================================================ */
+
+% dut.atd0.regs.each do |name, reg|   
+typedef union ATD_<%= name.to_s.upcase %>_union_tag {      /* <%= reg.description.first %> */
+  vuint32_t R;
+  struct {
+%   reg.named_bits(include_spacers: true).each do |bit_name, bits|
+%     if bit_name
+    vuint32_t <%= "#{bit_name.to_s.upcase}:#{bits.size};".ljust(30) %>  /* <%= bits.description.first %> */
+%     else    
+    vuint32_t <%= "#{bit_name.to_s.upcase}:#{bits.size};".ljust(30) %>
+%     end    
+%   end    
+  } B;
+} ATD_<%= name.to_s.upcase %>_tag;
+
+% end
+
+struct ATD_tag {
+% dut.atd0.regs.each do |name, reg|   
+  <%= "ATD_#{name.to_s.upcase}_tag #{name.to_s.upcase};".ljust(30) %>  /* <%= reg.description.first %> */
+% end  
+};
+
+% dut.atds.each_with_index do |atd, i|
+#define ATD_<%= i %> (*(volatile struct ATD_tag *) <%= atd.base_address.to_hex %>UL)
+% end
+
+/* ATD */
+% dut.atds.each_with_index do |atd, i|
+%   dut.atd0.regs.each do |name, reg|   
+#define <%= "ATD_#{i}_#{name.to_s.upcase}".ljust(20) + "ATD_#{i}.#{name.to_s.upcase}.R".ljust(20) %>  /* <%= reg.description.first %> */
+%   end
+
+% end
+
+#ifdef __MWERKS__
+#pragma pop
+#endif
+#ifdef __ghs__
+#pragma ghs endnowarning
+#endif
+#ifdef  __cplusplus
+}
+#endif
+#endif /* ifdef _ATD_H */
